@@ -22,8 +22,18 @@ export default defineConfig(({ command, mode }) => {
   console.log(command, mode);
   const root = process.cwd();
   const env = loadEnv(mode, root);
-  console.log(env);
+  console.log("env", env);
   return {
+    server: {
+      proxy: {
+        // 使用 proxy 实例
+        "/api": {
+          target: "http://106.14.171.53:8003/",
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, "/api"),
+        },
+      },
+    },
     plugins: [
       vue(),
       Components({

@@ -15,7 +15,7 @@ interface CXRequestConfig<T, R> extends RequestConfig<CXResponse<R>> {
 }
 
 const request = new Request({
-  baseURL: import.meta.env.BASE_URL,
+  baseURL: import.meta.env.VITE_APP_GLOB_BASE_API,
   timeout: 5000,
   headers: {
     "Content-Type": "application/json",
