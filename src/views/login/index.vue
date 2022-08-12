@@ -54,11 +54,11 @@ const loginInfo = ref<LoginParams>({
   password: "mm123456",
 });
 
-const userLoginStore = useLoginStore()
+const userLoginStore = useLoginStore();
 
 async function handleLogin(e: MouseEvent) {
-    e.preventDefault()
-    userLoginStore.login(loginInfo.value)
+  e.preventDefault();
+  userLoginStore.login(loginInfo.value);
 }
 </script>
 
