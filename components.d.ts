@@ -5,16 +5,11 @@
 declare module 'vue' {
   export interface GlobalComponents {
     AppProvider: typeof import('./src/components/AppProvider/index.vue')['default']
-    DialogContent: typeof import('./src/components/AppProvider/DialogContent.vue')['default']
     Global: typeof import('./src/components/AppProvider/global.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
-    Login: typeof import('./src/components/login/index.vue')['default']
-    NButton: typeof import('naive-ui')['NButton']
-    NCard: typeof import('naive-ui')['NCard']
     NConfigProvider: typeof import('naive-ui')['NConfigProvider']
     NDialogProvider: typeof import('naive-ui')['NDialogProvider']
     NMessageProvider: typeof import('naive-ui')['NMessageProvider']
-    NSpace: typeof import('naive-ui')['NSpace']
   }
 }
 

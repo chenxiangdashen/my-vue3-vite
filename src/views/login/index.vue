@@ -44,12 +44,12 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { LoginParams } from "@/types/user";
+import { ILoginReq } from "@/types/user";
 import useLoginStore from "@/store/modules/login";
 
 const title = import.meta.env.VITE_APP_TITLE;
 
-const loginInfo = ref<LoginParams>({
+const loginInfo = ref<ILoginReq>({
   username: "chenxiang",
   password: "mm123456",
 });
