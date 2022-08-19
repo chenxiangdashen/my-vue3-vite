@@ -49,6 +49,7 @@ export default defineConfig(({ command, mode }) => {
       alias: {
         "@": path.resolve(__dirname, "src"),
       },
+      extensions: [".ts", ".js", ".vue", ".json"],
     },
 
     css: {
@@ -63,6 +64,9 @@ export default defineConfig(({ command, mode }) => {
       outDir: OUTPUT_DIR,
       reportCompressedSize: false, // 启用/禁用 gzip 压缩大小报告
       chunkSizeWarningLimit: 1024, // chunk 大小警告的限制（单位kb）
+    },
+    test: {
+      global: true,
     },
   };
 });

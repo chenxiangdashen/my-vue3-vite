@@ -43,9 +43,13 @@
 
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, unref } from "vue";
+import { LocationQuery, Router, useRouter } from "vue-router";
 import { ILoginReq } from "@/types/user";
-import useLoginStore from "@/store/modules/login";
+import { useLoginStore } from "@/store/modules/login";
+import { encode } from "@/utils/code";
+import { TOKEN } from "@/utils/static";
+import { setToken } from "@/utils/token";
 
 const title = import.meta.env.VITE_APP_TITLE;
 
@@ -56,9 +60,29 @@ const loginInfo = ref<ILoginReq>({
 
 const userLoginStore = useLoginStore();
 
+const router: Router = useRouter();
+const query: LocationQuery = unref(router.currentRoute).query;
+
 async function handleLogin(e: MouseEvent) {
   e.preventDefault();
-  userLoginStore.login(loginInfo.value);
+  const userInfo: ILoginReq = {
+    username: loginInfo.value.username,
+    password: encode(loginInfo.value.password),
+  };
+  const res = await userLoginStore.login(userInfo);
+  if (res.code === "200") {
+    setToken(res.data);
+    window.$message.success("登录成功");
+    setTimeout(async () => {
+      if (query.redirect) {
+        const path: string = query.redirect as string;
+        Reflect.deleteProperty(query, "redirect");
+        await router.push({ path, query });
+      } else {
+        await router.push("/");
+      }
+    }, 999);
+  }
 }
 </script>
 
@@ -77,8 +101,8 @@ async function handleLogin(e: MouseEvent) {
   max-width: 1020px;
   box-shadow: 1.5px 3.99px 27px 0px rgb(0 0 0 / 10%);
   background-color: rgba(255, 255, 255, 0.3);
-
   display: flex;
+
   .left {
     padding: 40px;
     border-right: 1px solid #cccccc5e;

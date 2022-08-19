@@ -1,1 +1,1 @@
-export { default as themeSettings} from './theme.json'
+export { default as themeSettings } from "./theme.json";

@@ -1,8 +1,8 @@
-<template>
-</template>
+<template></template>
 
 <script lang="ts" setup>
-import { useDialog, useMessage } from "naive-ui";
+import { useDialog, useMessage, useLoadingBar } from "naive-ui";
 window.$message = useMessage();
-window.$dialog = useDialog()
+window.$dialog = useDialog();
+window.$loadingBar = useLoadingBar();
 </script>
