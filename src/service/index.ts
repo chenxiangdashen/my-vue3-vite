@@ -1,10 +1,10 @@
 import Request from "./request";
 import { AxiosResponse } from "axios";
-
 import type { RequestConfig } from "./request/types";
-
+import { getToken, removeToken } from "../utils/token";
+import { useRouter } from "vue-router";
 export interface CXResponse<T> {
-  code: number;
+  code: number | string;
   message: string;
   data: T;
 }
@@ -22,10 +22,26 @@ const request = new Request({
   },
   interceptors: {
     requestInterceptors: (config: CXRequestConfig<any, any>) => {
+      const token = getToken();
+
+      if (token) {
+        config.headers["ticket"] = token;
+      }
       return config;
     },
     responseInterceptors: (res: AxiosResponse) => {
+      if (res.data.code === "401") {
+        removeToken();
+        const router = useRouter();
+        const { currentRoute } = router;
+        router.replace({
+          path: "/login",
+        });
+      }
       return res;
+    },
+    responseInterceptorsCatch: (err: any) => {
+      console.log("---error", err);
     },
   },
 });
