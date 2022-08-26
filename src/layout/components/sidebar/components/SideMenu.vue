@@ -22,6 +22,7 @@ import { isExternal } from "@/utils/is";
 import { useAppStore } from "@/store/modules/app";
 import { ISideMenu, MenuPermission } from "@/store/types/types";
 import { MenuOption, NIcon } from "naive-ui";
+import { router } from "@/router";
 
 const expandIcon = function () {
   return h(NIcon, null, { default: () => h(CaretDownOutline) });
@@ -38,7 +39,7 @@ const menuOptions = computed(() => {
     .sort((a: ISideMenu, b: ISideMenu) => a.index - b.index);
 });
 
-function resolvePath(basePath, path) {
+function resolvePath(basePath: string, path: string) {
   if (isExternal(path)) return path;
   return (
     "/" +
@@ -93,8 +94,7 @@ function getMenuItem(route: MenuPermission, basePath: string = ""): ISideMenu {
   return menuItem;
 }
 
-function handleMenuSelect(key, item) {
-  console.log(key, item);
+function handleMenuSelect(key: string, item: any) {
   if (isExternal(item.path)) {
     window.open(item.path);
   } else {

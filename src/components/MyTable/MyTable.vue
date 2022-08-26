@@ -1,6 +1,5 @@
 <template>
   <n-data-table
-    mt-20
     remote
     :loading="myTable.loading.value"
     :scroll-x="1600"
@@ -15,40 +14,43 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, onMounted, watch } from "vue";
-import type { DataTableColumns } from "naive-ui";
-import MyTable, { ITable } from "./MyTableData";
+import { defineProps, onMounted, watch, ref } from "vue"
+import type { DataTableColumns } from "naive-ui"
+import MyTable, { ITable } from "./MyTable"
+import { cleanObj } from "@/utils/index"
 
 export interface ITableProps {
-  columns: DataTableColumns;
-  rowKey: string;
-  url: string;
-  searchParams: any;
+  columns: DataTableColumns
+  rowKey: string
+  url: string
+  searchParams: any
 }
 
-const props = defineProps<ITableProps>();
+const props = defineProps<ITableProps>()
 const options: ITable = {
+  page: 1,
   url: props.url,
-  _searchParams: props.searchParams,
-};
+  searchParams: props.searchParams,
+}
 
-const myTable = new MyTable(options);
+const myTable = new MyTable(options)
 function onPageChange(page: number) {
-  myTable.onPageChange(page);
+  myTable.onPageChange(page)
 }
 function onPageSizeChange(pageSize: number) {
-  myTable.onPageSizeChange(pageSize);
+  myTable.onPageSizeChange(pageSize)
 }
 onMounted(() => {
-  myTable.getData();
-});
+  myTable.getData()
+})
 
 watch(
   () => props.searchParams,
-  (params: { value: any }) => {
+  (params, preParams) => {
     /* ... */
-    myTable.searchParams = params.value;
-    myTable.getData();
-  }
-);
+    myTable.searchParams = cleanObj(Object.assign({}, params))
+    myTable.getData()
+  },
+  { deep: true }
+)
 </script>

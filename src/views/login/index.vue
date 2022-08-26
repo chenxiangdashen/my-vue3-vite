@@ -48,7 +48,6 @@ import { LocationQuery, Router, useRouter } from "vue-router";
 import { ILoginReq } from "@/types/user";
 import { useLoginStore } from "@/store/modules/login";
 import { encode } from "@/utils/code";
-import { TOKEN } from "@/utils/static";
 import { setToken } from "@/utils/token";
 
 const title = import.meta.env.VITE_APP_TITLE;

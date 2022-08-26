@@ -1,3 +1,5 @@
+import { isObject } from "./is"
+
 /**
  * @desc  函数防抖
  * @param {Function} func
@@ -10,11 +12,11 @@ export function debounce(
   wait: number,
   immediate: boolean
 ): () => void {
-  let timeout;
+  let timeout
   return function (...args: any[]): void {
-    let context = this;
+    let context = this
     if (timeout) {
-      clearTimeout(timeout);
+      clearTimeout(timeout)
     }
     // 立即执行需要两个条件，一是immediate为true，二是timeout未被赋值或被置为null
     if (immediate) {
@@ -22,12 +24,12 @@ export function debounce(
        * 如果定时器不存在，则立即执行，并设置一个定时器，wait毫秒后将定时器置为null
        * 这样确保立即执行后wait毫秒内不会被再次触发
        */
-      let callNow = !timeout;
+      let callNow = !timeout
       timeout = setTimeout(() => {
-        timeout = null;
-      }, wait);
+        timeout = null
+      }, wait)
       if (callNow) {
-        method.apply(context, args);
+        method.apply(context, args)
       }
     } else {
       // 如果immediate为false，则函数wait毫秒后执行
@@ -36,10 +38,10 @@ export function debounce(
          * args是一个类数组对象，所以使用fn.apply
          * 也可写作method.call(context, ...args)
          */
-        method.apply(context, args);
-      }, wait);
+        method.apply(context, args)
+      }, wait)
     }
-  };
+  }
 }
 
 /**
@@ -51,34 +53,53 @@ export function debounce(
  */
 export function parseResponse(res: any) {
   // mock data or real response data
-  let detail;
+  let detail
   if (typeof res.data === "string") {
     try {
-      detail = JSON.parse(res.data);
+      detail = JSON.parse(res.data)
       if (!detail) {
-        detail = res;
+        detail = res
       }
     } catch (e) {
-      detail = res;
+      detail = res
     }
   } else {
-    detail = res.data || res;
+    detail = res.data || res
   }
 
   if (detail && detail.code === "500") {
     let errorText =
       detail.data.indexOf("ORA-") > -1 || detail.data.indexOf("SQL") > -1
         ? "数据库错误，请稍后重试并联系管理员"
-        : detail.data;
+        : detail.data
     if (detail.data.indexOf("###") > -1) {
-      errorText = "网络错误，请稍后重试！";
+      errorText = "网络错误，请稍后重试！"
     }
     if (detail.data.indexOf("ticket error") > -1) {
-      errorText = "登录超时，需重新登录！";
+      errorText = "登录超时，需重新登录！"
     }
 
-    window.$message.error(errorText);
+    window.$message.error(errorText)
   }
 
-  return detail;
+  return detail
+}
+
+export function cleanObj(obj: any) {
+  for (let key in obj) {
+    if (obj[key] === "" || obj[key] === undefined || obj[key] === null) {
+      delete obj[key]
+    }
+  }
+  return obj
+}
+
+export function deepMerge<T = any>(src: any = {}, target: any = {}): T {
+  let key: string
+  for (key in target) {
+    src[key] = isObject(src[key])
+      ? deepMerge(src[key], target[key])
+      : (src[key] = target[key])
+  }
+  return src
 }

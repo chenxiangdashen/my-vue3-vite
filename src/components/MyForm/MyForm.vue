@@ -6,23 +6,33 @@
     :model="formValue"
     size="large"
   >
-    <n-grid :x-gap="12" :y-gap="8" :cols="3">
+    <n-grid :cols="3">
       <n-gi v-for="i in f" :key="i.name">
         <n-form-item :label="i.label">
-          <n-input
-            :name="i.name"
-            v-model:value="i.value"
-            :placeholder="i.placeholder"
-          />
+          <component :is="componentsMap[i.type]" :data="i"></component>
         </n-form-item>
       </n-gi>
     </n-grid>
 
-    <n-grid>
-      <n-grid-item>
-        <n-button type="primary" @click="search">搜索</n-button>
-        <n-button @click="reset">重置</n-button>
-      </n-grid-item>
+    <n-grid :cols="3">
+      <n-gi>
+        <n-space justify="start">
+          <p v-for="(item, index) in btn" :key="index">
+            <n-button :type="item.type" @click="item.click"
+              >{{ item.title }}
+            </n-button>
+          </p>
+        </n-space>
+      </n-gi>
+      <n-gi>
+        <n-form-item> </n-form-item>
+      </n-gi>
+      <n-gi>
+        <n-space justify="end">
+          <n-button type="primary" @click="search">搜索</n-button>
+          <n-button @click="reset">重置</n-button>
+        </n-space>
+      </n-gi>
     </n-grid>
   </n-form>
 </template>
@@ -31,13 +41,20 @@
 <script setup lang="ts">
 import { defineProps, reactive, defineEmits } from "vue";
 import _ from "lodash";
-import { FormInst, useMessage } from "naive-ui";
 import { IFormProps, IFormState } from "./MyForm";
+import MyInput from "./components/MyInput.vue";
+import MySelect from "./components/MySelect.vue";
+// ComponentPublicInstanceConstructor
+const componentsMap: any = {
+  MyInput,
+  MySelect,
+};
 
 type FormData = IFormProps[];
 
 interface FormValue {
   formData: FormData;
+  btnFun: any[];
 }
 
 const formProps = defineProps<FormValue>();
@@ -51,23 +68,19 @@ const emit = defineEmits<{
 
 const oldFormProps = _.cloneDeep(formProps);
 const f = reactive([...formProps.formData]);
-
+const btn = reactive([...formProps.btnFun]);
 const search = (e: any) => {
-  console.log(f);
   const state: IFormState = {
     formData: f.reduce((acc: IFormState, cur: IFormProps) => {
       acc[cur.name] = cur.value;
       return acc;
     }, {}),
   };
-  console.log(formValue);
   emit("onSearch", state);
 };
 const reset = () => {
-  console.log(oldFormProps.formData);
   f.forEach((i, index) => {
     i.value = oldFormProps.formData[index].value;
   });
 };
-console.log(f);
 </script>

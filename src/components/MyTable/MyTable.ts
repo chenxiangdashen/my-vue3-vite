@@ -1,5 +1,4 @@
-import type { DataTableColumns } from "naive-ui";
-import { h, ref, reactive, Ref } from "vue";
+import { ref, reactive } from "vue";
 import request from "../../service/index";
 import { parseResponse } from "../../utils/index";
 
@@ -33,14 +32,14 @@ export interface ITable {
   page: number;
   pageSize?: number;
   url: string;
-  _searchParams?: any;
+  searchParams?: any;
 }
 
 class MyTable implements ITable {
   page: number;
   pageSize?: number;
   url: string;
-  _searchParams?: any;
+  searchParams?: any;
 
   public loading = ref(null);
   public paginationReactive = paginationReactive;
@@ -49,7 +48,7 @@ class MyTable implements ITable {
     this.page = 1;
     this.pageSize = options.pageSize || 10;
     this.url = options.url;
-    this._searchParams = options._searchParams;
+    this.searchParams = options.searchParams;
   }
 
   // set searchParams(params: any) {
@@ -62,7 +61,7 @@ class MyTable implements ITable {
       url: this.url,
       method: "get",
       data: {
-        ...this._searchParams,
+        ...this.searchParams,
         currentPage,
         pageSize: this.pageSize,
       },

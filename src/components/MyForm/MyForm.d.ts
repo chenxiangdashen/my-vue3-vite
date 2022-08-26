@@ -1,13 +1,15 @@
-import { FormRules } from "naive-ui";
+import { FormRules } from "naive-ui"
 
-export declare interface IFormProps {
-  name: string;
-  label: string;
-  placeholder: string;
-  value: any;
-  rules?: FormRules;
+export interface IFormProps {
+  name: string
+  label: string
+  placeholder: string
+  value: string
+  type: "MyInput" | "MySelect" | "date" | "time" | "dateTime" | "textarea"
+  rules?: FormRules
+  options?: Array<{}>
 }
 
 export interface IFormState {
-  [key: string]: any;
+  [key: string]: any
 }
