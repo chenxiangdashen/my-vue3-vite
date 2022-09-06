@@ -41,46 +41,45 @@
   </div>
 </template>
 
-
 <script setup lang="ts">
-import { ref, unref } from "vue";
-import { LocationQuery, Router, useRouter } from "vue-router";
-import { ILoginReq } from "@/types/user";
-import { useLoginStore } from "@/store/modules/login";
-import { encode } from "@/utils/code";
-import { setToken } from "@/utils/token";
+import { ref, unref } from "vue"
+import { LocationQuery, Router, useRouter } from "vue-router"
+import { ILoginReq } from "@/types/user"
+import { useLoginStore } from "@/store/modules/login"
+import { encode } from "@/utils/code"
+import { setToken } from "@/utils/token"
 
-const title = import.meta.env.VITE_APP_TITLE;
+const title = import.meta.env.VITE_APP_TITLE
 
 const loginInfo = ref<ILoginReq>({
   username: "chenxiang",
   password: "mm123456",
-});
+})
 
-const userLoginStore = useLoginStore();
+const userLoginStore = useLoginStore()
 
-const router: Router = useRouter();
-const query: LocationQuery = unref(router.currentRoute).query;
+const router: Router = useRouter()
+const query: LocationQuery = unref(router.currentRoute).query
 
 async function handleLogin(e: MouseEvent) {
-  e.preventDefault();
+  e.preventDefault()
   const userInfo: ILoginReq = {
     username: loginInfo.value.username,
     password: encode(loginInfo.value.password),
-  };
-  const res = await userLoginStore.login(userInfo);
+  }
+  const res = await userLoginStore.login(userInfo)
   if (res.code === "200") {
-    setToken(res.data);
-    window.$message.success("登录成功");
+    setToken(res.data)
+    window.$message.success("登录成功")
     setTimeout(async () => {
       if (query.redirect) {
-        const path: string = query.redirect as string;
-        Reflect.deleteProperty(query, "redirect");
-        await router.push({ path, query });
+        const path: string = query.redirect as string
+        Reflect.deleteProperty(query, "redirect")
+        await router.push({ path, query })
       } else {
-        await router.push("/");
+        await router.push("/")
       }
-    }, 999);
+    }, 999)
   }
 }
 </script>

@@ -1,8 +1,7 @@
-import { defineStore } from "pinia";
-import { UserInfoType, ILoginReq } from "../../types/user";
-import { TOKEN } from "../../utils/static";
-import { login } from "../../api/user";
-import { router } from "../../router/index";
+import { defineStore } from "pinia"
+import { UserInfoType, ILoginReq } from "../../types/user"
+import { TOKEN } from "../../utils/static"
+import { login } from "../../api/user"
 
 const useLoginStore = defineStore({
   id: "login",
@@ -14,15 +13,15 @@ const useLoginStore = defineStore({
         username: "",
         signature: "",
       } as UserInfoType,
-    };
+    }
   },
 
   actions: {
     async login(params: ILoginReq) {
-      const res = await login(params);
-      return res;
+      const res = await login(params)
+      return res
     },
   },
-});
+})
 
-export { useLoginStore };
+export { useLoginStore }

@@ -49,7 +49,6 @@ const onCancel = () => {
 }
 
 const onSure = () => {
-  console.log(getBindValue.value.value)
   emit("onSure", {
     ROLE_IDS: getBindValue.value.value.join(","),
     USER_ID: getBindValue.value.userId,

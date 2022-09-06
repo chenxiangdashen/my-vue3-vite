@@ -13,7 +13,26 @@
       class="basicModal"
       style="width: 450px"
     >
-      <AddVue @on-cancel="onCancel" @on-sure="onSure"></AddVue>
+      <AddVue
+        @on-cancel="onCancel"
+        @on-sure="onSure"
+        :row-data="rowData"
+        :row-type="rowType"
+      ></AddVue>
+    </MyModal>
+
+    <MyModal
+      @register="addModalRegister"
+      ref="modalRef"
+      class="basicModal"
+      style="width: 450px"
+    >
+      <AddVue
+        @on-cancel="onCancel"
+        @on-sure="onSure"
+        :row-data="rowData"
+        :row-type="rowType"
+      ></AddVue>
     </MyModal>
 
     <MyModal
@@ -38,6 +57,7 @@
 import { onMounted, h, ref, Ref, unref, reactive } from "vue"
 import { IFormProps, IFormState } from "@/components/MyForm/MyForm"
 import { DataTableColumns, NButton } from "naive-ui"
+import { InternalRowData } from "naive-ui/lib/data-table/src/interface"
 import { IModalProps } from "@/components/MyModal/MyModal"
 import AddVue from "./common/Add.vue"
 import AssignRole, { ITransferProps } from "./common/AssignRole.vue"
@@ -49,10 +69,11 @@ import { useModal } from "@/components/MyModal"
 
 const userStore = useUserStore()
 
-const [addModalRegister, { openModal, closeModal, setSubLoading }] = useModal({
-  title: "新增操作员",
-  maskClosable: true,
-})
+const [addModalRegister, { openModal, closeModal, setSubLoading, setProps }] =
+  useModal({
+    title: "新增操作员",
+    maskClosable: true,
+  })
 
 const [assignRoleModalRegister, assignRoleModalMethods] = useModal({
   title: "分配角色",
@@ -63,6 +84,9 @@ const assignRoleProps: Ref<ITransferProps> = ref({
   option: [],
   userId: "",
 })
+
+const rowData = ref({})
+const rowType: Ref<"add" | "edit"> = ref("add")
 
 const columns: DataTableColumns = [
   { type: "selection" },
@@ -77,13 +101,42 @@ const columns: DataTableColumns = [
     width: 120,
     align: "center",
     fixed: "right",
-    render(rowData, index) {
+    render(r: InternalRowData, index) {
       return [
         h(
           NButton,
           {
+            tag: "a",
+            text: true,
+            type: "primary",
+            style: "margin-left: 15px;",
+            onClick: () => {
+              setProps({ title: "修改" })
+              rowData.value = r
+              rowType.value = "edit"
+              openModal()
+            },
+          },
+          { default: () => "修改" }
+        ),
+        h(
+          NButton,
+          {
+            tag: "a",
+            text: true,
             size: "small",
-            type: "error",
+            type: "warning",
+            style: "margin-left: 15px;",
+            onClick: () => {},
+          },
+          { default: () => "详情" }
+        ),
+        h(
+          NButton,
+          {
+            tag: "a",
+            text: true,
+            type: "warning",
             style: "margin-left: 15px;",
           },
           { default: () => "删除" }
@@ -132,6 +185,8 @@ const btnList: any[] = [
     hidden: false,
     action: "add",
     click: () => {
+      rowType.value = "add"
+      setProps({ title: "新增操作员" })
       openModal()
       setSubLoading(true)
     },

@@ -34,6 +34,7 @@ console.log(propsRef)
 
 const getBindValue = computed(() => {
   return {
+    ...attrs,
     ...props,
     ...unref(propsRef),
   }
