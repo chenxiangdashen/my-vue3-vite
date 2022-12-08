@@ -65,7 +65,7 @@ const useRequest = <
   };
   // 自动调用
   option.autoRun && run();
-  // 是否轮询
+  // 是否轮iii询
   option.polling && polling();
   // 计算最终使用的函数
   const runComputed = computed(() => {
